@@ -574,7 +574,7 @@ static ssize_t show_bios_limit(struct cpufreq_policy *policy, char *buf)
 	return sprintf(buf, "%u\n", policy->cpuinfo.max_freq);
 }
 
-#ifdef CONFIG_VDD_USERSPACE
+#ifdef CONFIG_CPU_FREQ_VDD_LEVELS
 extern ssize_t acpuclk_get_vdd_levels_str(char *buf);
 static ssize_t show_vdd_levels(struct kobject *a, struct attribute *b, char *buf)
 {
@@ -642,7 +642,7 @@ cpufreq_freq_attr_rw(scaling_max_freq);
 cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
 
-#ifdef CONFIG_VDD_USERSPACE
+#ifdef CONFIG_CPU_FREQ_VDD_LEVELS
 define_one_global_rw(vdd_levels);
 #endif
 
@@ -661,7 +661,7 @@ static struct attribute *default_attrs[] = {
 	NULL
 };
 
-#ifdef CONFIG_VDD_USERSPACE
+#ifdef CONFIG_CPU_FREQ_VDD_LEVELS
 static struct attribute *vddtbl_attrs[] = {
 	&vdd_levels.attr,
 	NULL
@@ -671,7 +671,7 @@ static struct attribute_group vddtbl_attr_group = {
 	.attrs = vddtbl_attrs,
 	.name = "vdd_table",
 };
-#endif	/* CONFIG_VDD_USERSPACE */
+#endif	/* CONFIG_CPU_FREQ_VDD_LEVELS */
 
 struct kobject *cpufreq_global_kobject;
 EXPORT_SYMBOL(cpufreq_global_kobject);
@@ -1985,9 +1985,9 @@ EXPORT_SYMBOL_GPL(cpufreq_unregister_driver);
 static int __init cpufreq_core_init(void)
 {
 	int cpu;
-#ifdef CONFIG_VDD_USERSPACE
+#ifdef CONFIG_CPU_FREQ_VDD_LEVELS
 	int rc;
-#endif	/* CONFIG_VDD_USERSPACE */
+#endif	/* CONFIG_CPU_FREQ_VDD_LEVELS */
 
 	for_each_possible_cpu(cpu) {
 		per_cpu(cpufreq_policy_cpu, cpu) = -1;
@@ -1999,9 +1999,9 @@ static int __init cpufreq_core_init(void)
 	BUG_ON(!cpufreq_global_kobject);
 	register_syscore_ops(&cpufreq_syscore_ops);
 
-#ifdef CONFIG_VDD_USERSPACE
+#ifdef CONFIG_CPU_FREQ_VDD_LEVELS
 	rc = sysfs_create_group(cpufreq_global_kobject, &vddtbl_attr_group);
-#endif	/* CONFIG_VDD_USERSPACE */
+#endif	/* CONFIG_CPU_FREQ_VDD_LEVELS */
 
 	return 0;
 }
