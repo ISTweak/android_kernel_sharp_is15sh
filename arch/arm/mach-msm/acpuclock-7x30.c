@@ -429,15 +429,8 @@ static void setup_cpufreq_table(void)
 	u8 pll2_l = readl_relaxed(PLL2_L_VAL_ADDR) & 0xFF;
 #endif /* CONFIG_SHSYS_CUST */
 
-	for (speed = acpu_freq_tbl; speed->acpu_clk_khz; speed++){
-		if(speed->use_for_scaling){
-#ifdef CONFIG_SHSYS_CUST
-			if(pll2_l == PLL2_1024_MHZ) {
-				if(speed->acpu_clk_khz > 2048000){
-					break;
-				}
-			}
-#endif /* CONFIG_SHSYS_CUST */
+	for (speed = acpu_freq_tbl; speed->acpu_clk_khz; speed++) {
+		if (speed->use_for_scaling) {
 			cpufreq_tbl[i].index = i;
 			cpufreq_tbl[i].frequency = speed->acpu_clk_khz;
 			i++;
